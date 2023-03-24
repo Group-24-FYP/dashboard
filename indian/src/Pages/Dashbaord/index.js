@@ -35,6 +35,7 @@ function Dashboard() {
   const [inventory, setInventory] = useState(0);
   const [customers, setCustomers] = useState(0);
   const [revenue, setRevenue] = useState(0);
+  const [data , setData] = useState([{}])
 
   useEffect(() => {
     getOrders().then((res) => {
@@ -47,6 +48,18 @@ function Dashboard() {
     getCustomers().then((res) => {
       setCustomers(res.total);
     });
+  }, []);
+
+  useEffect(() => {
+    fetch("/members").then(
+      (res) => res.json()
+      ).then(
+        data => {
+          setData(data)
+          console.log(data)
+        }
+      )
+    
   }, []);
 
   return (
