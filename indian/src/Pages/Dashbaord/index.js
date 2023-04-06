@@ -8,7 +8,7 @@ import { Card, Space, Statistic, Table, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { getCustomers, getInventory, getOrders, getRevenue } from "../../API";
 import img1 from '../../image/bottle.png';
-
+import video1 from '../../video/v1.mp4'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -120,6 +120,11 @@ function Dashboard() {
               fontSize: 24,
               padding: 20,}}>
         <Typography.Title level={1}>Segmentation</Typography.Title>
+        <div>
+          <video width="400" height="200" controls>
+                    <source src={video1} type="video/mp4" />
+          </video>
+        </div>
         <div>
           <h3>Anomaly Segmentation Map</h3>
           <img src={img1} alt=""/>
