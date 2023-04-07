@@ -1,11 +1,10 @@
-from flask import Flask
+from flask import Flask, jsonify
 
 app = Flask(__name__)
+@app.route('/api/data')
+def get_data():
+    data = {'uncertainty_score': '97', 'status': 'Defected Product' , 'ASM': '../../image/bottle.png'}
+    return jsonify(data)
 
-@app.route("/members")
-
-def members():
-    return {"members" :["Member1" ,"Member2"]}
-
-if __name__ =="__main__":
-    app.run(debug=True)
+if __name__ == '__main__':
+    app.run(use_reloader=True)

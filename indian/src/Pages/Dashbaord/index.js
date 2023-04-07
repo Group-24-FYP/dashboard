@@ -1,11 +1,5 @@
-import {
-  DollarCircleOutlined,
-  ShoppingCartOutlined,
-  ShoppingOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
 import { Card, Space, Statistic, Table, Typography } from "antd";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { getCustomers, getInventory, getOrders, getRevenue } from "../../API";
 import img1 from '../../image/bottle.png';
 import video1 from '../../video/v1.mp4'
@@ -51,16 +45,13 @@ function Dashboard() {
   }, []);
 
   useEffect(() => {
-    fetch("/members").then(
-      (res) => res.json()
-      ).then(
-        data => {
-          setData(data)
-          console.log(data)
+        async function fetchData() {
+          const response = await fetch('/api/data'); // replace with your Flask API endpoint
+          const jsonData = await response.json();
+          setData(jsonData);
         }
-      )
-    
-  }, []);
+        fetchData();
+      }, [data]);
 
   return (
     <div>
@@ -86,7 +77,7 @@ function Dashboard() {
               padding: 0,
             }}>
         <h3>Status</h3>
-        <h4>Defected Product</h4>
+        <h4>{data.status}</h4>
       </Card>
 
       <Card style={{
@@ -104,8 +95,8 @@ function Dashboard() {
                       width: 200,
                       height: 200
                     }}>
-                    
-                      <ReviewsBar score='89.5' />
+                      
+                      <ReviewsBar score= {data.uncertainty_score}/>
                 </div>
               </Space>
       </Card>
@@ -127,12 +118,11 @@ function Dashboard() {
         </div>
         <div>
           <h3>Anomaly Segmentation Map</h3>
-          <img src={img1} alt=""/>
+          <img src={require('../../image/bottle.png')} alt=""/>
         </div>
       </div>
     </Space>
     </div>
-    
     
   );
 }
