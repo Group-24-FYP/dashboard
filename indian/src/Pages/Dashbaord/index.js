@@ -1,229 +1,133 @@
-import { Card, Space, Statistic, Table, Typography } from "antd";
-import React, { useEffect, useState } from "react";
-import { getCustomers, getInventory, getOrders, getRevenue } from "../../API";
-import img1 from '../../image/bottle.png';
-import video1 from '../../video/v1.mp4'
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
-import { Bar } from "react-chartjs-2";
+import { Card, Space } from "antd";
+import React, { useState } from "react";
+import img1 from '../../image/ASM.png';
+// import video1 from '../../video/toothbrush_conveyorbelt_R1.mp4'// H264 MPEG-4 AVC
+//import video1 from '../../video/20230601_140508_converted_vlc.mp4'
+import video1 from "../../video/c_20230601_140508.mp4"
 import ReviewsBar from "../../reviews/ReviewsBar";
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
-
+import statusText from '../../Model_data/status.txt';
+import scoreText from '../../Model_data/score.txt';
+// import Webcam from "react-webcam";
+ 
 function Dashboard() {
-  const [orders, setOrders] = useState(0);
-  const [inventory, setInventory] = useState(0);
-  const [customers, setCustomers] = useState(0);
-  const [revenue, setRevenue] = useState(0);
-  const [data , setData] = useState([{}])
+  const [status, setStatus] = useState('');
+  const [score, setScore] = useState('');
+  
+    fetch(statusText)
+    .then(r => r.text())
+    .then(text => {
+      setStatus(text);;
+    });
 
-  useEffect(() => {
-    getOrders().then((res) => {
-      setOrders(res.total);
-      setRevenue(res.discountedTotal);
+    fetch(scoreText)
+    .then(r => r.text())
+    .then(text => {
+      setScore(text);;
     });
-    getInventory().then((res) => {
-      setInventory(res.total);
-    });
-    getCustomers().then((res) => {
-      setCustomers(res.total);
-    });
-  }, []);
-
-  useEffect(() => {
-        async function fetchData() {
-          const response = await fetch('/api/data'); // replace with your Flask API endpoint
-          const jsonData = await response.json();
-          setData(jsonData);
-        }
-        fetchData();
-      }, [data]);
 
   return (
-    <div>
-      <h3></h3>
-    <Space size={100} direction="horizontal" align="center">
-      <div style={{ textAlign: 'center', 
-              width: 850,
-              height: 800,
-              color: "red",
-              backgroundColor: "rgba(255,0,0,0.25)",
-              borderRadius: 20,
-              fontSize: 24,
-              padding: 20}}>
-      <Typography.Title level={1}>Detection</Typography.Title>
-      <Space>
-        
-      </Space>
-      <Card style={{
-              color: "red",
-              backgroundColor: "rgba(255,255,0,0.25)",
-              borderRadius: 50,
-              fontSize: 24,
-              padding: 0,
-            }}>
-        <h3>Status</h3>
-        <h4>{data.status}</h4>
-      </Card>
 
-      <Card style={{
-              width: '100%',
-              height: '50%',
-              color: "red",
-              backgroundColor: "rgba(255,255,0,0.25)",
-              borderRadius: 50,
-              fontSize: 24,
-              padding: 0,
-            }}>
-            <Space size={10} direction="vertical" align="baseline">
-                <h2>Uncertainty Score</h2>
-                <div  style={{
-                      width: 200,
-                      height: 200
-                    }}>
-                      
-                      <ReviewsBar score= {data.uncertainty_score}/>
-                </div>
-              </Space>
-      </Card>
-      </div>
-      
+    <div>
+    <Space size={50} direction="horizontal" >
+ 
+        {/* LEFT */}
       <div style={{ textAlign: 'center', 
-              width: 850,
+              width: 1100,
               height: 800,
-              color: "red",
-              backgroundColor: "rgba(255,0,0,0.25)",
+              color: "rgb(255,255,255)",
+              backgroundColor: "rgb(12, 19, 79)", 
+              fontSize: 24,}}>
+        <Space size={10} direction="vertical" align="baseline">
+            <div style={{ marginTop: '50px' }}>
+            <h1>Annotated Video Stream</h1>
+              <div style={{ marginTop: '-180px' }}>
+                <video id="myVideo" controls autoPlay width="600" style={{ marginBottom: '-180px', transform: 'rotate(90deg)' }}>
+                  <source src={video1} type="video/mp4" />
+                </video>
+              </div>
+  
+            </div>
+              
+            </Space>
+      </div>
+
+
+        {/* RIGHT */}
+      <div style={{ textAlign: 'center', 
+              width: 650,
+              height: 800,
+              color: "rgb(255,255,255)",
+              backgroundColor: "rgb(12, 19, 79)",
               borderRadius: 20,
               fontSize: 24,
-              padding: 20,}}>
-        <Typography.Title level={1}>Segmentation</Typography.Title>
-        <div>
-          <video width="400" height="200" controls>
-                    <source src={video1} type="video/mp4" />
-          </video>
-        </div>
-        <div>
-          <h3>Anomaly Segmentation Map</h3>
-          <img src={require('../../image/bottle.png')} alt=""/>
-        </div>
+              padding: 20,
+              margin: "0 auto",  
+              }}>
+      
+        <Card style={{
+                height: 250,
+                color: "rgb(255,255,255)",
+                backgroundColor: "rgba(92, 70, 156,0.25)",
+                borderRadius: 50,
+                fontSize: 24,
+                padding: 0,
+                width: 400,
+                margin: "0 auto", 
+              }}>
+              <Space size={10} direction="vertical" align="baseline">
+                  <h2>Uncertainty Score</h2>
+                  <div  style={{
+                        width: 150,
+                        height: 150
+                      }}>
+                        
+                      <ReviewsBar  style={{ marginLeft: "100px" }} score= {score}  />
+                  </div>
+                </Space>
+        </Card>
+
+        <Card style={{
+                width: '100%',
+                height: '38%',
+                color: "rgb(255,255,255)",
+                backgroundColor: "rgba(92, 70, 156,0.25)",
+                borderRadius: 50,
+                fontSize: 24,
+                padding: 0,
+                marginTop: "20px"
+              }}>
+              <Space size={10} direction="vertical" align="baseline">
+                  <div style={{ marginTop: '-160px' }}>
+                    <h2>Anomaly Segmentation Map</h2>
+                    <img src={img1} alt="" width="400" height="200" />
+                  </div>
+                </Space>
+        </Card>
+
+        <Card style={{
+                color: "rgb(255,255,255)",
+                backgroundColor: "rgb(29, 38, 125)",
+                borderRadius: 50,
+                fontSize: 24,
+                padding: 0,
+                width: 400,
+                height: 200,
+                margin: "0 auto", 
+                marginTop: "20px"
+              }}>
+                <div style={{ marginTop: '-20px' }}>
+                  <h3>Status</h3>
+                  <h4>{status}</h4>
+
+                </div>
+        </Card>
+
       </div>
+
     </Space>
     </div>
     
   );
 }
 
-function DashboardCard({ title, value, icon ,img}) {
-  return (
-    <Card>
-      <Space direction="horizontal">
-        {icon}
-        <Statistic title={title} value={value} />
-      </Space>
-      {img}
-    </Card>
-  );
-}
-
-function RecentOrders() {
-  const [dataSource, setDataSource] = useState([]);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    setLoading(true);
-    getOrders().then((res) => {
-      setDataSource(res.products.splice(0, 3));
-      setLoading(false);
-    });
-  }, []);
-
-  return (
-    <>
-      <Typography.Text>Recent Orders</Typography.Text>
-      <Table
-        columns={[
-          {
-            title: "Title",
-            dataIndex: "title",
-          },
-          {
-            title: "Quantity",
-            dataIndex: "quantity",
-          },
-          {
-            title: "Price",
-            dataIndex: "discountedPrice",
-          },
-        ]}
-        loading={loading}
-        dataSource={dataSource}
-        pagination={false}
-      ></Table>
-    </>
-  );
-}
-
-function DashboardChart() {
-  const [reveneuData, setReveneuData] = useState({
-    labels: [],
-    datasets: [],
-  });
-
-  useEffect(() => {
-    getRevenue().then((res) => {
-      const labels = res.carts.map((cart) => {
-        return `User-${cart.userId}`;
-      });
-      const data = res.carts.map((cart) => {
-        return cart.discountedTotal;
-      });
-
-      const dataSource = {
-        labels,
-        datasets: [
-          {
-            label: "Revenue",
-            data: data,
-            backgroundColor: "rgba(255, 0, 0, 1)",
-          },
-        ],
-      };
-
-      setReveneuData(dataSource);
-    });
-  }, []);
-
-  const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: "bottom",
-      },
-      title: {
-        display: true,
-        text: "Order Revenue",
-      },
-    },
-  };
-
-  return (
-    <Card style={{ width: 500, height: 250 }}>
-      <Bar options={options} data={reveneuData} />
-    </Card>
-  );
-}
 export default Dashboard;
